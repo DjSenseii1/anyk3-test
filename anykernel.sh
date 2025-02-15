@@ -4,14 +4,14 @@
 ## AnyKernel setup
 # begin properties
 properties() { '
-kernel.string=N0Kernel by EmanuelCN
+kernel.string=AMD-Reborn+ by SenseiiX
 do.devicecheck=1
 do.modules=0
 do.systemless=1
 do.cleanup=1
 do.cleanuponabort=0
 device.name1=munch
-device.name2=
+device.name2=munchin
 device.name3=
 device.name4=
 device.name5=
@@ -33,6 +33,45 @@ ramdisk_compression=auto;
 # set permissions/ownership for included ramdisk files
 set_perm_recursive 0 0 750 750 $ramdisk/*;
 
+# kernel naming scene
+ui_print " ";
+
+case "$ZIPFILE" in
+  *miui*|*MIUI*)
+    ui_print "MIUI/HyperOS Detected,";
+    ui_print "Using MIUI DTBO... ";
+    mv *-miui-dtbo.img $home/dtbo.img;
+    rm *-aosp-dtbo.img;
+  ;;
+  *aosp*|*AOSP*)
+    ui_print "AOSP DTBO Detected,";
+    ui_print "Using AOSP DTBO... ";
+    mv *-aosp-dtbo.img $home/dtbo.img;
+    rm *-miui-dtbo.img;
+  ;;
+  *)
+    ui_print "Variant is not specified !!!";
+    ui_print "Using AOSP DTBO... ";
+    mv *-aosp-dtbo.img $home/dtbo.img;
+    rm *-miui-dtbo.img;
+  ;;
+esac
+ui_print " ";
+
+case "$ZIPFILE" in
+  *eff*|*EFF*)
+    ui_print "Efficient CPUFreq variant detected,";
+    ui_print "Using Efficient CPUFreq DTB...";
+    mv *-effcpu-dtb $home/dtb;
+    rm *-normal-dtb;
+  ;;
+  *)
+    ui_print "Normal CPUFreq variant detected,";
+    ui_print "Using Normal CPUFreq DTB...";
+    mv *-normal-dtb $home/dtb;
+    rm *-effcpu-dtb;
+  ;;
+esac
 
 ## AnyKernel install
 dump_boot;
